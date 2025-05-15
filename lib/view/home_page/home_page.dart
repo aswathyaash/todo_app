@@ -102,6 +102,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void editTask(int index) {
+    final currentTask = _toDoList[index][0];
+    _controller.text = currentTask;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onSave: () {
+            if (_controller.text.trim().isEmpty) return;
+            setState(() {
+              _toDoList[index][0] = _controller.text;
+              _controller.clear();
+            });
+
+            _updateHive();
+            Navigator.of(context).pop();
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+            _controller.clear();
+          },
+        );
+      },
+    );
+  }
+
   void _updateHive() {
     final myBox = Hive.box("myBox");
     myBox.put("TODOLIST", _toDoList);
@@ -122,7 +150,6 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.add),
       ),
       body: SlidableAutoCloseBehavior(
-        // ✅ Only this is needed!
         child: Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: ListView.builder(
@@ -147,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                   taskCompleted: _toDoList[index][1],
                   onChanged: (value) => checkBoxChanged(value, index),
                   onDelete: () => deleteTask(index),
+                  onEdit: () => editTask(index),
                 ),
               );
             },

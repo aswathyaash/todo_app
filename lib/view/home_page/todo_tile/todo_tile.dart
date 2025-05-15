@@ -5,6 +5,7 @@ class ToDoTile extends StatelessWidget {
   final bool taskCompleted;
   final Function(bool?)? onChanged;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const ToDoTile({
     super.key,
@@ -12,6 +13,7 @@ class ToDoTile extends StatelessWidget {
     required this.taskCompleted,
     required this.onChanged,
     required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -45,6 +47,10 @@ class ToDoTile extends StatelessWidget {
                 maxLines: 2,
                 softWrap: true,
               ),
+            ),
+            IconButton(
+              onPressed: onEdit,
+              icon: Icon(Icons.edit, color: Colors.black),
             ),
           ],
         ),
